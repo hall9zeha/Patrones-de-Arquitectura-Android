@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">My Deals</string>
     <string name="apiKey">4942dc897b67a2b3cfc920bbae113cdf</string>
     <string name="urlApi">http://feed.linkmydeals.com/</string>
 </resources>
