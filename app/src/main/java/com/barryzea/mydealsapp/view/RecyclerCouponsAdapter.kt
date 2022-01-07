@@ -1,4 +1,4 @@
-package com.barryzea.mydealsapp
+package com.barryzea.mydealsapp.view
 
 import android.content.Intent
 import android.util.Log
@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.barryzea.mydealsapp.R
+import com.barryzea.mydealsapp.model.Coupon
 import com.barryzea.mydealsapp.myApp.myApp
+import com.barryzea.mydealsapp.view.CouponDetailActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import java.util.zip.Inflater
 
 class RecyclerCouponsAdapter(var coupons: ArrayList<Coupon>) : RecyclerView.Adapter<RecyclerCouponsAdapter.CouponsHolder>() {
 

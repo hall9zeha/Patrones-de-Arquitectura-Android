@@ -1,25 +1,17 @@
-package com.barryzea.mydealsapp
+package com.barryzea.mydealsapp.model
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.util.Log
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.barryzea.mydealsapp.model.ApiAdapter
-
+import com.barryzea.mydealsapp.presenter.CouponPresenter
+import com.barryzea.mydealsapp.view.RecyclerCouponsAdapter
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+class CouponRepositoryClass(var couponPresenter:CouponPresenter): CouponRepository {
 
-        val rvCoupons: RecyclerView = findViewById(R.id.rvCoupons)
-        rvCoupons.layoutManager = LinearLayoutManager(this)
+    override fun getCoupons() {
         var apiAdapter=ApiAdapter();
         val coupons = ArrayList<Coupon>()
         val apiService = apiAdapter.getClientService()
@@ -36,7 +28,7 @@ class MainActivity : AppCompatActivity() {
                     var coupon = Coupon(jsonObject)
                     coupons.add(coupon)
                 }
-                rvCoupons.adapter = RecyclerCouponsAdapter(coupons)
+                couponPresenter.showCoupons(coupons)
             }
         })
 

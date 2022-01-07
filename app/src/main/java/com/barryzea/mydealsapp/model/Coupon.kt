@@ -1,4 +1,4 @@
-package com.barryzea.mydealsapp
+package com.barryzea.mydealsapp.model
 
 import com.google.gson.JsonObject
 import java.io.Serializable

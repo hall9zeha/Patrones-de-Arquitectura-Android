@@ -1,4 +1,4 @@
-package com.barryzea.mydealsapp
+package com.barryzea.mydealsapp.view
 
 import android.content.Intent
 import android.net.Uri
@@ -7,11 +7,13 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.barryzea.mydealsapp.model.Coupon
+import com.barryzea.mydealsapp.R
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
 class CouponDetailActivity : AppCompatActivity() {
-    private var couponSelected:Coupon? = null
+    private var couponSelected: Coupon? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coupon_detail)
