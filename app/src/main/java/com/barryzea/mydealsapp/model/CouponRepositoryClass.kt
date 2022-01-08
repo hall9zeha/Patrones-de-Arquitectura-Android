@@ -1,17 +1,22 @@
 package com.barryzea.mydealsapp.model
 
 import android.util.Log
-import com.barryzea.mydealsapp.presenter.CouponPresenter
-import com.barryzea.mydealsapp.view.RecyclerCouponsAdapter
+import androidx.lifecycle.MutableLiveData
+
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CouponRepositoryClass(var couponPresenter:CouponPresenter): CouponRepository {
 
-    override fun getCoupons() {
+class CouponRepositoryClass(): CouponRepository {
+    private var couponsLiveData:MutableLiveData<ArrayList<Coupon>> = MutableLiveData()
+    override fun getCoupons(): MutableLiveData<ArrayList<Coupon>> {
+        return couponsLiveData
+    }
+
+    override fun callCoupons() {
         var apiAdapter=ApiAdapter();
         val coupons = ArrayList<Coupon>()
         val apiService = apiAdapter.getClientService()
@@ -28,7 +33,7 @@ class CouponRepositoryClass(var couponPresenter:CouponPresenter): CouponReposito
                     var coupon = Coupon(jsonObject)
                     coupons.add(coupon)
                 }
-                couponPresenter.showCoupons(coupons)
+                couponsLiveData.value=coupons
             }
         })
 

@@ -1,69 +1,79 @@
 package com.barryzea.mydealsapp.view
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.barryzea.mydealsapp.BR
 import com.barryzea.mydealsapp.R
 import com.barryzea.mydealsapp.model.Coupon
+import com.barryzea.mydealsapp.model.OnItemClickListener
 import com.barryzea.mydealsapp.myApp.myApp
 import com.barryzea.mydealsapp.view.CouponDetailActivity
+import com.barryzea.mydealsapp.viewmodel.CouponViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 
-class RecyclerCouponsAdapter(var coupons: ArrayList<Coupon>) : RecyclerView.Adapter<RecyclerCouponsAdapter.CouponsHolder>() {
-
+class RecyclerCouponsAdapter(var viewModel: CouponViewModel) : RecyclerView.Adapter<RecyclerCouponsAdapter.CouponsHolder>() {
+    private var coupons:ArrayList<Coupon>?=null
+    fun setUpAdapter(coupons: ArrayList<Coupon>){
+        this.coupons=coupons
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CouponsHolder {
-        var view=LayoutInflater.from(parent.context).inflate(R.layout.card_coupon,parent,false)
-        return CouponsHolder(view)
+        var layoutInflater=LayoutInflater.from(parent.context)
+        var binding:ViewDataBinding=DataBindingUtil.inflate(layoutInflater,viewType,parent, false)
+
+        return CouponsHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CouponsHolder, position: Int) {
-        holder.setDataCard(coupons[position])
+        coupons?.get(position)?.let { holder.setDataCard(viewModel,position) }
+
     }
 
     override fun getItemCount(): Int {
-        return  if(coupons.size>0) coupons.size else 0
+        return  coupons?.size ?: 0
     }
 
-    class CouponsHolder (v:View):RecyclerView.ViewHolder(v), View.OnClickListener{
+    override fun getItemViewType(position: Int): Int {
+        return getLayoutForId(position)
+    }
+    fun getLayoutForId(position:Int):Int{
+        return R.layout.card_coupon
+    }
+    class CouponsHolder (v:ViewDataBinding):RecyclerView.ViewHolder(v.root),OnItemClickListener{
 
-        private var coupon: Coupon? = null
-        private var imgCoupon: ImageView = v.findViewById(R.id.imgCoupon)
-        private var tvTitle: TextView = v.findViewById(R.id.tvTitle)
-        private var tvDescriptionShort: TextView = v.findViewById(R.id.tvDescriptionShort)
-        private var tvCategory: TextView = v.findViewById(R.id.tvCategory)
-        private var tvDate: TextView = v.findViewById(R.id.tvDate)
-
-        override fun onClick(v: View?) {
-            Log.i("CLICK Coupon: ", coupon!!.title)
-            val context = v!!.context
-            val showPhotoIntent = Intent(context, CouponDetailActivity::class.java)
-            showPhotoIntent.putExtra("COUPON", coupon)
-            context.startActivity(showPhotoIntent)
-        }
-        init {
-            v.setOnClickListener(this)
+       private var binding:ViewDataBinding?=null
+        init{
+            this.binding=v
         }
 
-        fun setDataCard(coupon: Coupon){
-            this.coupon = coupon
-            Glide.with(myApp.context!!).load(coupon.image_url)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(520, 520).centerCrop().into(imgCoupon)
-            tvTitle.text = coupon.title
-            tvDescriptionShort.text = coupon.descriptionShort
-            tvCategory.text = coupon.category
-            tvDate.text = coupon.endDate
+
+        fun setDataCard(viewModelCoupon:CouponViewModel, position:Int){
+            binding?.setVariable(BR.model,viewModelCoupon)
+            binding?.setVariable(BR.position,position)
+            binding?.setVariable(BR.clickListener,this)
+            binding?.executePendingBindings()
+
 
         }
 
+        override fun onClickItem(coupon: Coupon) {
+
+          val showPhotoIntent = Intent(myApp.context, CouponDetailActivity::class.java)
+          showPhotoIntent.putExtra("COUPON", coupon)
+          myApp.context.startActivity(showPhotoIntent)
+        }
 
 
     }

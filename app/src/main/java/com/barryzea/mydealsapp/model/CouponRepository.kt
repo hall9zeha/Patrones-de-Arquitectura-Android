@@ -1,5 +1,8 @@
 package com.barryzea.mydealsapp.model
 
+import androidx.lifecycle.MutableLiveData
+
 interface CouponRepository {
-    fun getCoupons()
+    fun callCoupons()
+    fun getCoupons():MutableLiveData<ArrayList<Coupon>>
 }
